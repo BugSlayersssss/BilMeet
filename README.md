@@ -82,18 +82,7 @@ Users can create hangout requests by specifying time, location, duration, and ac
 
 ### 🔍 User Search
 - Explore other users in a separate tab
-- Users are sorted by interest compatibility
-
-## 🧩 System Modules
-
-- User Module  
-- Calendar & Schedule Module  
-- Hangout Request Module  
-- Messaging Module  
-- Map & Location Module  
-- Tag Management Module  
-- Friend & Club Module  
-- History Module  
+- Users are sorted by interest compatibility 
 
 ### What Makes BilMeet Unique?
 - Schedule-based availability matching
