@@ -1,30 +1,42 @@
 import java.util.List;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Calendar;
+import java.util.ArrayList;
 public class ChatManager {
-    private List<Chat> chats;
-    private int chatNum=0;
+    private List<Chat> allChats;
+    
+    public ChatManager(){
+        this.allChats = new ArrayList<>();
+    }
     
     
     public Chat createPrivateChat(User user1, User user2){
-        List<User> users= new List<User>();
-        users.add(user1);
-        users.add(user2);
-        chatNum++;
-        return new Chat(chatNum, "private", users);
+        Chat newChat = new Chat(true);
+        newChat.addParticipants(user1);
+        newChat.addParticipants(user2);
+        allChats.add(newChat);
+        return newChat;
 
     }
-    public Chat createGroupChat(HangoutRequest event){
-        chatNum++;
-        return new Chat(chatNum, "group", event.getParticipants());
-
+    public Chat createGroupChat(List<User> eventParticipants){
+        Chat newChat = new Chat(false);
+       for (User user: eventParticipants){
+        newChat.addParticipants(user);
+       }
+       allChats.add(newChat);
+       return newChat;
     }
-    public Message sendMessage(Chat chat, User sender, String text){
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY); // 24-hour format
-        int minute = calendar.get(Calendar.MINUTE);
-        String time = hour+"."+minute;
-        chat.addMessage(new Message(text,time,sender));
+    public void sendMessage(Chat chat, String content, User sender){
+    if (chat != null && chat.getParticipants().contains(sender)) {
+            Message newMessage = new Message(content, sender);
+            chat.addMessage(newMessage);
+        }
     }
+    public List<Chat> getChatsForUser(User user){
+        List<Chat> userChats= new ArrayList<>();
+        for (Chat chat: allChats){
+            if (chat.getParticipants().contains(user)){
+                userChats.add(chat);
+            }
+        }
+        return userChats;
+    }   
 }
