@@ -1,54 +1,122 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     
-    private String userName;
-    private String userSurname;
+    // Basic Profile Information
+    private String userId; 
+    private String name;
+    private String surname;
+    private String email;
+    private String password;
+    private String department;
+
+    // Lists for relationships, interests, and events
+    private List<String> interests;
+    private List<Integer> userInterestCodes;
+    private List<User> friends;
+    private List<FriendRequest> friendRequests;
+    private List<HangoutRequest> eventHistory;
+    private List<HangoutRequest> organizedEvents; // Required for the Organized Events page
+    
+    // User's schedule
     private Schedule schedule;
-    private int userId;
-    private String userPassword;
-    private String userMail;
-    private ArrayList<String> userInterests;
-    private ArrayList<User> userFriends;
-    private ArrayList<FriendRequest> friendRequests;
-    private ArrayList<HangoutRequest> eventHistory;
 
-    public final String[] interestNames = {"Books", "Music", "Baking", "Volleyball", "Football", "Movies", "Comic Books", "Drawing", "Video Games", "Cat Person", "Dog Person", "Basketball", "Mentoring"};
+    // Predefined interest arrays
+    public final int[] availableInterestCodes = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    public final String[] availableInterestNames = {"Books", "Music", "Baking", "Volleyball", "Football", "Movies", "Comic Books", "Drawing", "Video Games", "Cat Person", "Dog Person", "Basketball", "Mentoring"};
 
-    public User(String userName, String userSurname, String userPassword, String userMail) {
-        this.userName = userName;
-        this.userSurname = userSurname;
-        this.userId = (int)(Math.random()) * 9000 + 1000;
-        this.userPassword = userPassword;
-        this.userMail = userMail;
-        this.userFriends = new ArrayList<User>();       //create an empty arraylist of friends for now
-        this.friendRequests = new ArrayList<FriendRequest>();      //empty request list
-        this.eventHistory = new ArrayList<HangoutRequest>();
+    // Constructor (Matches the call in UserManager perfectly)
+    public User(String name, String surname, String email, String password, String department) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.department = department;
+        
+        // Initialize lists to prevent NullPointerExceptions
+        this.interests = new ArrayList<>();
+        this.userInterestCodes = new ArrayList<>();
+        this.friends = new ArrayList<>();
+        this.friendRequests = new ArrayList<>();
+        this.eventHistory = new ArrayList<>();
+        this.organizedEvents = new ArrayList<>();
+        this.schedule = new Schedule();
     }
 
-    //Adder methods
-    public void addFriend(User newFriend) { userFriends.add(newFriend); }
+    //  Profile Management Methods 
+    
+    public void updateProfile(String newName, String newSurname, String newDepartment) {
+        this.name = newName;
+        this.surname = newSurname;
+        this.department = newDepartment;
+    }
+
+    //  Adder Methods 
+
+    public void addOrganizedEvent(HangoutRequest event) {
+        if (!this.organizedEvents.contains(event)) {
+            this.organizedEvents.add(event);
+        }
+    }
+
     public void addInterest(String interest) {
-        userInterests.add(interest);
+        
+        if (!this.interests.contains(interest)) {
+            this.interests.add(interest);
+        }
     }
-    public void addPendingRequest(FriendRequest fr) { friendRequests.add(fr); }
 
-    //Remover methods
-    public void removeFriend(User friend) { userFriends.remove(friend); }
-    public void removeInterest(String interest) { userInterests.remove(interest); }
+    public void addFriend(User newFriend) { 
+        if (!this.friends.contains(newFriend)) {
+            this.friends.add(newFriend); 
+        }
+    }
 
-    //Setter methods for profile editing
-    public void setUserName(String newName) { this.userName = newName; }
-    public void setSchedule(Schedule schedule) {this.schedule = schedule;}
+    public void addPendingRequest(FriendRequest fr) { 
+        this.friendRequests.add(fr); 
+    }
 
-    //Getter methods
-    public String getUserName() { return userName; }
-    public String getUserSurname() { return userSurname; }
-    public int getUserId() { return userId; }
-    public String getUserPassword() { return userPassword; }
-    public String getUserMail() { return userMail; }
-    public ArrayList<String> getUserInterests() { return userInterests; }
-    public ArrayList<User> getUserFriends() { return userFriends; }
-    public ArrayList<HangoutRequest> getUserEventHistory() { return eventHistory; }
+    //  Remover Methods 
 
+    public void removeFriend(User friend) { 
+        this.friends.remove(friend); 
+    }
+
+    public void removeInterest(String interest) { 
+        this.interests.remove(interest); 
+    }
+
+    //  Getters 
+
+    public String getUserId() { return userId; }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public String getDepartment() { return department; }
+        
+    
+    // Returns the full name (First Last)
+    public String getUserName() { return this.name + " " + this.surname; }
+    
+    public Schedule getSchedule() { return schedule; }
+    public List<String> getInterests() { return interests; }
+    public List<Integer> getUserInterestCodes() { return userInterestCodes; }
+    public List<User> getFriends() { return friends; }
+    public List<FriendRequest> getFriendRequests() { return friendRequests; }
+    public List<HangoutRequest> getEventHistory() { return eventHistory; }
+    public List<HangoutRequest> getOrganizedEvents() { return organizedEvents; }
+
+    //  Setters 
+    
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setSchedule(Schedule schedule) { this.schedule = schedule; }
+
+    //  Utility Methods 
+
+    public void renderUser() {
+        // Method that will render user info
+        System.out.println("Rendering user: " + getUserName());
+    }
 }
