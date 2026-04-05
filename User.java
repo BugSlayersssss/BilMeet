@@ -4,6 +4,7 @@ public class User {
     
     private String userName;
     private String userSurname;
+    private Schedule schedule;
     private int userId;
     private String userPassword;
     private String userMail;
@@ -38,6 +39,7 @@ public class User {
 
     //Setter methods for profile editing
     public void setUserName(String newName) { this.userName = newName; }
+    public void setSchedule(Schedule schedule) {this.schedule = schedule;}
 
     //Getter methods
     public String getUserName() { return userName; }
