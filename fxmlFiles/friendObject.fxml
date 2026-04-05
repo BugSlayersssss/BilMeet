@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="350.0" style="-fx-background-color: #FFD1DC; -fx-background-radius: 30;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EventCardController.java">
+   <children>
+      <TextArea layoutX="151.0" layoutY="28.0" prefHeight="4.0" prefWidth="175.0" promptText="Name" text="Name" />
+      <Circle fill="DODGERBLUE" layoutX="69.0" layoutY="94.0" radius="55.0" stroke="BLACK" strokeType="INSIDE" />
+      <TextArea layoutX="151.0" layoutY="74.0" prefHeight="4.0" prefWidth="175.0" promptText="Name" text="Surname" />
+      <TextArea layoutX="151.0" layoutY="123.0" prefHeight="4.0" prefWidth="175.0" promptText="Name" text="ID" />
+   </children>
+</AnchorPane>
