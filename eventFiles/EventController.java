@@ -16,17 +16,51 @@ public class EventController {
     @FXML private CheckBox cbSports, cbStudy, cbChatting, cbVideoGames, cbShopping, cbCafe, cbWatchParty, cbPicnic;
 
     private static EventController instance;
+    public UserManager userManager = new UserManager();
     public void initialize() { instance = this; loadEvents(); }
     public static EventController getInstance() { return instance; }
 
-    @FXML
+    
+        @FXML
     public void loadEvents() {
         if (eventListContainer == null) return;
         eventListContainer.getChildren().clear();
-        User me = LoginManager.getCurrentUser();
+        
+        User me = userManager.getCurrentUser();
+        Schedule mySchedule = me.getSchedule(); 
+
         List<HangoutRequest> recommended = EventManager.getInstance().getRecommendedEvents(me);
-        renderList(recommended);
+        List<HangoutRequest> expiredEventsToRemove = new ArrayList<>(); 
+
+        try {
+            for (HangoutRequest request : recommended) {
+
+                if (request.isExpired()) {
+                    expiredEventsToRemove.add(request); 
+                    continue; 
+                }
+                int dayIndexForSchedule = request.getDay() - 1; 
+                
+                if (mySchedule != null && !mySchedule.isAvailableForEvent(dayIndexForSchedule, request.getStartHour(), request.getEndHour())) {
+                    continue; 
+                }
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("event.fxml"));
+                Node eventCard = loader.load();
+                EventCardController cardController = loader.getController();
+                cardController.setData(request);
+                eventListContainer.getChildren().add(eventCard);
+            }
+
+            if (!expiredEventsToRemove.isEmpty()) {
+                EventManager.getInstance().getAllEvents().removeAll(expiredEventsToRemove);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+    
 
     public void replaceCardWithDetails(Node oldCard, HangoutRequest request) {
         try {
@@ -61,16 +95,24 @@ public class EventController {
         try {
             List<String> tags = new ArrayList<>();
             if (cbSports != null && cbSports.isSelected()) tags.add("SPORTS");
-            // ... diğer tagleri buraya ekle ...
+            if (cbStudy != null && cbStudy.isSelected()) tags.add("STUDY");     
+            if (cbChatting != null && cbChatting.isSelected()) tags.add("CHATTING");    
+            if (cbVideoGames != null && cbVideoGames.isSelected()) tags.add("VIDEO_GAMES");
+            if (cbShopping != null && cbShopping.isSelected()) tags.add("SHOPPING");
+            if (cbCafe != null && cbCafe.isSelected()) tags.add("CAFE");
+            if (cbWatchParty != null && cbWatchParty.isSelected()) tags.add("WATCH_PARTY");
+            if (cbPicnic != null && cbPicnic.isSelected()) tags.add("PICNIC");
+
+            
 
             HangoutRequest newEvent = new HangoutRequest(eventNameInput.getText(), locationInput.getText(), 
                 Integer.parseInt(startHourInput.getText().trim()), Integer.parseInt(startMinInput.getText().trim()),
                 Integer.parseInt(endHourInput.getText().trim()), Integer.parseInt(endMinInput.getText().trim()), 
-                tags, new ArrayList<>(), Integer.parseInt(quotaInput.getText().trim()), LoginManager.getCurrentUser());
+                tags, new ArrayList<>(), Integer.parseInt(quotaInput.getText().trim()), userManager.getCurrentUser());
 
             EventManager.getInstance().addEvent(newEvent);
-            LoginManager.getCurrentUser().addOrganizedEvent(newEvent);
-            loadEvents(); // Listeyi yenile
+            userManager.getCurrentUser().addOrganizedEvent(newEvent);
+            loadEvents(); 
         } catch (Exception ex) { System.out.println("Input hatası!"); }
     }
 
