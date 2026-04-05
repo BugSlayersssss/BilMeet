@@ -51,9 +51,10 @@ public class EventManager {
         List<User> participants = event.getParticipants();
         if (participants == null || participants.isEmpty()) return 0.0;
 
+        MatchAlgorithm matchAlgorithm = new MatchAlgorithm();
         int totalScore = 0;
         for (User p : participants) {
-            totalScore += calculateUserMatchScore(currentUser, p);
+            totalScore += matchAlgorithm.calculateMatchScore(currentUser, p);
         }
         return (double) totalScore / participants.size();
     }
