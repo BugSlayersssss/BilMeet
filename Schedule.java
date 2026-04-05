@@ -1,10 +1,10 @@
 public class Schedule {
-    // 7 days a week, 24 hours a day (or adjust to specific time slots)
+    
     private boolean[][] availabilityMatrix;
 
     public Schedule() {
         this.availabilityMatrix = new boolean[7][24];
-        // By default, initialize all slots to false (busy) or true (free)
+        
     }
 
     public void setAvailability(int day, int hour, boolean isFree) {
@@ -13,11 +13,15 @@ public class Schedule {
         }
     }
 
-    public boolean checkAvailability(int day, int hour) {
-        if (isValidSlot(day, hour)) {
-            return availabilityMatrix[day][hour];
+    public boolean isAvailableForEvent(int dayIndex, int startHour, int endHour) {
+        if (dayIndex < 0 || dayIndex > 6) return false;
+        
+        for (int i = startHour; i < endHour; i++) {
+            if (availabilityMatrix[dayIndex][i] == true) {
+                return false; 
+            }
         }
-        return false;
+        return true; 
     }
 
     private boolean isValidSlot(int day, int hour) {
