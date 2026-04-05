@@ -24,12 +24,14 @@ public class LoginController {
     @FXML
     private Label wrongPasswordLabel;
 
+    private DataManager dataManager = new DataManager();
+
     @FXML
     private void handleLogin(ActionEvent event) throws IOException {
-        String mail = mailField.getText();
-        String password = passwordField.getText();
+        String mail = mailField.getText().trim();
+        String password = passwordField.getText().trim();
 
-        if (mail.equals("test") && password.equals("1234")) {
+        if (dataManager.validateLogin(mail, password)) {
             wrongPasswordLabel.setVisible(false);
             openProfile(event);
         } else {
