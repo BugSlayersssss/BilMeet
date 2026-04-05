@@ -38,8 +38,33 @@ public class EventManager {
     }
 
     public List<HangoutRequest> handleFilterByTag(String tag) {
+        if (tag == null || tag.isEmpty()) {
+            return getAllEvents();
+        }
+        
         return events.stream()
-                .filter(e -> e.getTags().contains(tag))
+                .filter(e -> e.getTags() != null && 
+                        e.getTags().stream().anyMatch(t -> t.equalsIgnoreCase(tag)))
                 .collect(Collectors.toList());
+    }
+     public double calculateEventSocialScore(HangoutRequest event, User currentUser) {
+        List<User> participants = event.getParticipants();
+        if (participants == null || participants.isEmpty()) return 0.0;
+
+        int totalScore = 0;
+        for (User p : participants) {
+            totalScore += calculateUserMatchScore(currentUser, p);
+        }
+        return (double) totalScore / participants.size();
+    }
+
+    public List<HangoutRequest> getRecommendedEvents(User currentUser) {
+        List<HangoutRequest> sortedEvents = new ArrayList<>(events);
+        sortedEvents.sort((e1, e2) -> {
+            double score1 = calculateEventSocialScore(e1, currentUser);
+            double score2 = calculateEventSocialScore(e2, currentUser);
+            return Double.compare(score2, score1);
+        });
+        return sortedEvents;
     }
 }
