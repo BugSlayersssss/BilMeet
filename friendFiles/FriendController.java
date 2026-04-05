@@ -1,15 +1,19 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Node;
 
 public class FriendController {
 
-    public User u = new User("k", "a", "a"); //DELETE THIS LATER TODO
+    @FXML
+    private VBox friendsContainer;
 
     public void openFriends(ActionEvent e) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("friendView.fxml"));
@@ -19,11 +23,6 @@ public class FriendController {
         stage.show();
     }
     
-    public void loadUsers() {
-        //TODO
-        //FOR THE SEARCH SCREEN IG?
-    }
-
     public void sendFriendRequest() {
 
     }
@@ -38,10 +37,27 @@ public class FriendController {
 
     public void loadFriends (User user) {
 
-        for (int i = 0; i < u.getUserFriends().size(); i++) {
+        if (friendsContainer != null) {
+            friendsContainer.getChildren().clear();
+        }
 
-            user.renderUser(); //TODO
-            //Some kind of method that lists the user
+        
+        ArrayList<User> myFriends = user.getUserFriends();
+
+        try {
+            for (User friend : myFriends) {
+                
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("friendObject.fxml"));  //gets the friend card
+                Node card = loader.load();
+
+                
+                FriendCardController controller = loader.getController();
+                controller.setData(friend);
+                
+                friendsContainer.getChildren().add(card);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
